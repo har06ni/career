@@ -1,22 +1,41 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: CareerAI API specification
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: auth
+    description: Authentication
+  - name: users
+    description: User operations
+  - name: students
+    description: Student profiles
+  - name: companies
+    description: Company profiles
+  - name: mentors
+    description: Mentor profiles
+  - name: jobs
+    description: Job listings
+  - name: applications
+    description: Job applications
+  - name: sessions
+    description: Mentor sessions
+  - name: courses
+    description: Learning courses
+  - name: ai
+    description: AI analysis
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +43,751 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # Auth
+  /auth/register:
+    post:
+      operationId: register
+      tags: [auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterInput"
+      responses:
+        "201":
+          description: Registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "400":
+          description: Bad request
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
+        "401":
+          description: Unauthorized
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Logout
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          description: Unauthorized
+
+  # Student Profiles
+  /students/profile:
+    get:
+      operationId: getStudentProfile
+      tags: [students]
+      summary: Get current student's profile
+      responses:
+        "200":
+          description: Student profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentProfile"
+    put:
+      operationId: updateStudentProfile
+      tags: [students]
+      summary: Update student profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StudentProfileInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentProfile"
+
+  /students/{studentId}:
+    get:
+      operationId: getStudentById
+      tags: [students]
+      summary: Get student by ID
+      parameters:
+        - name: studentId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Student
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentProfile"
+
+  /students:
+    get:
+      operationId: listStudents
+      tags: [students]
+      summary: List students (for companies)
+      parameters:
+        - name: skills
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Students list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudentProfile"
+
+  # Company Profiles
+  /companies/profile:
+    get:
+      operationId: getCompanyProfile
+      tags: [companies]
+      summary: Get current company profile
+      responses:
+        "200":
+          description: Company profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyProfile"
+    put:
+      operationId: updateCompanyProfile
+      tags: [companies]
+      summary: Update company profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CompanyProfileInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyProfile"
+
+  # Mentor Profiles
+  /mentors:
+    get:
+      operationId: listMentors
+      tags: [mentors]
+      summary: List mentors
+      parameters:
+        - name: skills
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Mentors list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MentorProfile"
+
+  /mentors/profile:
+    get:
+      operationId: getMentorProfile
+      tags: [mentors]
+      summary: Get current mentor profile
+      responses:
+        "200":
+          description: Mentor profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MentorProfile"
+    put:
+      operationId: updateMentorProfile
+      tags: [mentors]
+      summary: Update mentor profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MentorProfileInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MentorProfile"
+
+  /mentors/{mentorId}:
+    get:
+      operationId: getMentorById
+      tags: [mentors]
+      summary: Get mentor by ID
+      parameters:
+        - name: mentorId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Mentor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MentorProfile"
+
+  # Jobs
+  /jobs:
+    get:
+      operationId: listJobs
+      tags: [jobs]
+      summary: List jobs
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: skills
+          in: query
+          schema:
+            type: string
+        - name: location
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+        - name: offset
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Jobs list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+    post:
+      operationId: createJob
+      tags: [jobs]
+      summary: Create a job posting
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+
+  /jobs/{jobId}:
+    get:
+      operationId: getJobById
+      tags: [jobs]
+      summary: Get job by ID
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+    put:
+      operationId: updateJob
+      tags: [jobs]
+      summary: Update a job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobInput"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+    delete:
+      operationId: deleteJob
+      tags: [jobs]
+      summary: Delete a job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MessageResponse"
+
+  /jobs/my:
+    get:
+      operationId: getMyJobs
+      tags: [jobs]
+      summary: Get jobs posted by current company
+      responses:
+        "200":
+          description: Company jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+
+  # Applications
+  /applications:
+    post:
+      operationId: applyToJob
+      tags: [applications]
+      summary: Apply to a job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationInput"
+      responses:
+        "201":
+          description: Applied
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  /applications/my:
+    get:
+      operationId: getMyApplications
+      tags: [applications]
+      summary: Get student's applications
+      responses:
+        "200":
+          description: Applications
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+
+  /applications/job/{jobId}:
+    get:
+      operationId: getJobApplications
+      tags: [applications]
+      summary: Get applications for a job (company)
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Applicants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Application"
+
+  /applications/{applicationId}/status:
+    patch:
+      operationId: updateApplicationStatus
+      tags: [applications]
+      summary: Update application status
+      parameters:
+        - name: applicationId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ApplicationStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Application"
+
+  # Sessions
+  /sessions:
+    post:
+      operationId: bookSession
+      tags: [sessions]
+      summary: Book a mentor session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionInput"
+      responses:
+        "201":
+          description: Booked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+
+  /sessions/my:
+    get:
+      operationId: getMySessions
+      tags: [sessions]
+      summary: Get sessions for current user
+      responses:
+        "200":
+          description: Sessions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Session"
+
+  /sessions/{sessionId}/status:
+    patch:
+      operationId: updateSessionStatus
+      tags: [sessions]
+      summary: Update session status
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SessionStatusUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Session"
+
+  # Courses
+  /courses:
+    get:
+      operationId: listCourses
+      tags: [courses]
+      summary: List courses
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Courses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Course"
+
+  /courses/{courseId}:
+    get:
+      operationId: getCourseById
+      tags: [courses]
+      summary: Get course by ID
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Course
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Course"
+
+  /courses/{courseId}/enroll:
+    post:
+      operationId: enrollCourse
+      tags: [courses]
+      summary: Enroll in a course
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "201":
+          description: Enrolled
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseEnrollment"
+
+  /courses/{courseId}/progress:
+    patch:
+      operationId: updateCourseProgress
+      tags: [courses]
+      summary: Update course progress
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CourseProgressUpdate"
+      responses:
+        "200":
+          description: Updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CourseEnrollment"
+
+  /courses/my/enrollments:
+    get:
+      operationId: getMyEnrollments
+      tags: [courses]
+      summary: Get enrolled courses with progress
+      responses:
+        "200":
+          description: Enrollments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CourseEnrollment"
+
+  # AI Analysis
+  /ai/career-score:
+    get:
+      operationId: getCareerScore
+      tags: [ai]
+      summary: Get AI career score and summary
+      responses:
+        "200":
+          description: Career score
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CareerScore"
+
+  /ai/recommendations:
+    get:
+      operationId: getCareerRecommendations
+      tags: [ai]
+      summary: Get career recommendations
+      responses:
+        "200":
+          description: Recommendations
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CareerRecommendations"
+
+  /ai/skill-gap:
+    get:
+      operationId: getSkillGap
+      tags: [ai]
+      summary: Get skill gap analysis
+      responses:
+        "200":
+          description: Skill gap
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SkillGapAnalysis"
+
+  /ai/job-matches:
+    get:
+      operationId: getJobMatches
+      tags: [ai]
+      summary: Get AI-matched jobs for student
+      responses:
+        "200":
+          description: Matched jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/JobMatch"
+
+  /ai/analyze-resume:
+    post:
+      operationId: analyzeResume
+      tags: [ai]
+      summary: Analyze resume text
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResumeAnalysisInput"
+      responses:
+        "200":
+          description: Resume analysis
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ResumeAnalysis"
+
+  # Dashboard summaries
+  /dashboard/student:
+    get:
+      operationId: getStudentDashboard
+      tags: [users]
+      summary: Get student dashboard summary
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StudentDashboard"
+
+  /dashboard/company:
+    get:
+      operationId: getCompanyDashboard
+      tags: [users]
+      summary: Get company dashboard summary
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CompanyDashboard"
+
+  /dashboard/mentor:
+    get:
+      operationId: getMentorDashboard
+      tags: [users]
+      summary: Get mentor dashboard summary
+      responses:
+        "200":
+          description: Dashboard data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MentorDashboard"
+
 components:
   schemas:
     HealthStatus:
@@ -31,6 +795,745 @@ components:
       properties:
         status:
           type: string
-      required:
-        - status
+      required: [status]
 
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required: [message]
+
+    # Auth
+    RegisterInput:
+      type: object
+      required: [name, email, password, role]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+          enum: [student, mentor, company]
+        college:
+          type: ["string", "null"]
+        degree:
+          type: ["string", "null"]
+        graduationYear:
+          type: ["integer", "null"]
+        companyName:
+          type: ["string", "null"]
+        industry:
+          type: ["string", "null"]
+        website:
+          type: ["string", "null"]
+        experience:
+          type: ["integer", "null"]
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      required: [user, token]
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        token:
+          type: string
+
+    User:
+      type: object
+      required: [id, name, email, role, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+        avatarUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    # Student
+    StudentProfile:
+      type: object
+      required: [id, userId, name, email]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        college:
+          type: ["string", "null"]
+        degree:
+          type: ["string", "null"]
+        graduationYear:
+          type: ["integer", "null"]
+        skills:
+          type: array
+          items:
+            type: string
+        bio:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        resumeUrl:
+          type: ["string", "null"]
+        projects:
+          type: array
+          items:
+            $ref: "#/components/schemas/Project"
+        certifications:
+          type: array
+          items:
+            type: string
+        experience:
+          type: array
+          items:
+            $ref: "#/components/schemas/ExperienceItem"
+        profileCompletion:
+          type: integer
+        linkedinUrl:
+          type: ["string", "null"]
+        githubUrl:
+          type: ["string", "null"]
+
+    StudentProfileInput:
+      type: object
+      properties:
+        college:
+          type: string
+        degree:
+          type: string
+        graduationYear:
+          type: integer
+        skills:
+          type: array
+          items:
+            type: string
+        bio:
+          type: string
+        avatarUrl:
+          type: string
+        resumeUrl:
+          type: string
+        certifications:
+          type: array
+          items:
+            type: string
+        linkedinUrl:
+          type: string
+        githubUrl:
+          type: string
+
+    Project:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        url:
+          type: ["string", "null"]
+        technologies:
+          type: array
+          items:
+            type: string
+
+    ExperienceItem:
+      type: object
+      required: [company, role]
+      properties:
+        company:
+          type: string
+        role:
+          type: string
+        startDate:
+          type: ["string", "null"]
+        endDate:
+          type: ["string", "null"]
+        current:
+          type: boolean
+        description:
+          type: ["string", "null"]
+
+    # Company
+    CompanyProfile:
+      type: object
+      required: [id, userId, companyName, email]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        companyName:
+          type: string
+        email:
+          type: string
+        industry:
+          type: ["string", "null"]
+        website:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        logoUrl:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        size:
+          type: ["string", "null"]
+
+    CompanyProfileInput:
+      type: object
+      properties:
+        companyName:
+          type: string
+        industry:
+          type: string
+        website:
+          type: string
+        description:
+          type: string
+        logoUrl:
+          type: string
+        location:
+          type: string
+        size:
+          type: string
+
+    # Mentor
+    MentorProfile:
+      type: object
+      required: [id, userId, name, email]
+      properties:
+        id:
+          type: integer
+        userId:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        company:
+          type: ["string", "null"]
+        title:
+          type: ["string", "null"]
+        experience:
+          type: ["integer", "null"]
+        skills:
+          type: array
+          items:
+            type: string
+        bio:
+          type: ["string", "null"]
+        avatarUrl:
+          type: ["string", "null"]
+        rating:
+          type: ["number", "null"]
+        sessionsCompleted:
+          type: integer
+        pricePerSession:
+          type: ["number", "null"]
+        availability:
+          type: array
+          items:
+            type: string
+
+    MentorProfileInput:
+      type: object
+      properties:
+        company:
+          type: string
+        title:
+          type: string
+        experience:
+          type: integer
+        skills:
+          type: array
+          items:
+            type: string
+        bio:
+          type: string
+        avatarUrl:
+          type: string
+        pricePerSession:
+          type: number
+        availability:
+          type: array
+          items:
+            type: string
+
+    # Jobs
+    Job:
+      type: object
+      required: [id, companyId, title, description, createdAt]
+      properties:
+        id:
+          type: integer
+        companyId:
+          type: integer
+        companyName:
+          type: ["string", "null"]
+        companyLogoUrl:
+          type: ["string", "null"]
+        title:
+          type: string
+        description:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        salary:
+          type: ["string", "null"]
+        location:
+          type: ["string", "null"]
+        experienceLevel:
+          type: ["string", "null"]
+        jobType:
+          type: ["string", "null"]
+        isRemote:
+          type: boolean
+        isActive:
+          type: boolean
+        applicantCount:
+          type: integer
+        createdAt:
+          type: string
+
+    JobInput:
+      type: object
+      required: [title, description]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        skills:
+          type: array
+          items:
+            type: string
+        salary:
+          type: string
+        location:
+          type: string
+        experienceLevel:
+          type: string
+        jobType:
+          type: string
+        isRemote:
+          type: boolean
+        isActive:
+          type: boolean
+
+    # Applications
+    Application:
+      type: object
+      required: [id, jobId, studentId, status, createdAt]
+      properties:
+        id:
+          type: integer
+        jobId:
+          type: integer
+        studentId:
+          type: integer
+        jobTitle:
+          type: ["string", "null"]
+        companyName:
+          type: ["string", "null"]
+        studentName:
+          type: ["string", "null"]
+        studentEmail:
+          type: ["string", "null"]
+        studentAvatarUrl:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, reviewing, shortlisted, rejected, hired]
+        coverLetter:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ApplicationInput:
+      type: object
+      required: [jobId]
+      properties:
+        jobId:
+          type: integer
+        coverLetter:
+          type: string
+
+    ApplicationStatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [pending, reviewing, shortlisted, rejected, hired]
+
+    # Sessions
+    Session:
+      type: object
+      required: [id, studentId, mentorId, scheduledAt, status, createdAt]
+      properties:
+        id:
+          type: integer
+        studentId:
+          type: integer
+        mentorId:
+          type: integer
+        studentName:
+          type: ["string", "null"]
+        mentorName:
+          type: ["string", "null"]
+        mentorAvatarUrl:
+          type: ["string", "null"]
+        scheduledAt:
+          type: string
+        duration:
+          type: integer
+        topic:
+          type: ["string", "null"]
+        status:
+          type: string
+          enum: [pending, confirmed, completed, cancelled]
+        price:
+          type: ["number", "null"]
+        meetingUrl:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    SessionInput:
+      type: object
+      required: [mentorId, scheduledAt]
+      properties:
+        mentorId:
+          type: integer
+        scheduledAt:
+          type: string
+        duration:
+          type: integer
+        topic:
+          type: string
+
+    SessionStatusUpdate:
+      type: object
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [pending, confirmed, completed, cancelled]
+
+    # Courses
+    Course:
+      type: object
+      required: [id, title, description, category]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        instructor:
+          type: ["string", "null"]
+        thumbnailUrl:
+          type: ["string", "null"]
+        duration:
+          type: ["string", "null"]
+        level:
+          type: ["string", "null"]
+        rating:
+          type: ["number", "null"]
+        enrollmentCount:
+          type: integer
+        skills:
+          type: array
+          items:
+            type: string
+        isFree:
+          type: boolean
+        price:
+          type: ["number", "null"]
+
+    CourseEnrollment:
+      type: object
+      required: [id, courseId, studentId, progress, createdAt]
+      properties:
+        id:
+          type: integer
+        courseId:
+          type: integer
+        studentId:
+          type: integer
+        courseTitle:
+          type: ["string", "null"]
+        courseThumbnailUrl:
+          type: ["string", "null"]
+        courseCategory:
+          type: ["string", "null"]
+        progress:
+          type: integer
+        completed:
+          type: boolean
+        createdAt:
+          type: string
+
+    CourseProgressUpdate:
+      type: object
+      required: [progress]
+      properties:
+        progress:
+          type: integer
+        completed:
+          type: boolean
+
+    # AI
+    CareerScore:
+      type: object
+      required: [score, level, profileCompletion]
+      properties:
+        score:
+          type: integer
+        level:
+          type: string
+        profileCompletion:
+          type: integer
+        skillsCount:
+          type: integer
+        projectsCount:
+          type: integer
+        applicationsCount:
+          type: integer
+        sessionsCount:
+          type: integer
+        insights:
+          type: array
+          items:
+            type: string
+
+    CareerRecommendations:
+      type: object
+      required: [careerPaths, learningPlan]
+      properties:
+        careerPaths:
+          type: array
+          items:
+            $ref: "#/components/schemas/CareerPath"
+        learningPlan:
+          type: array
+          items:
+            $ref: "#/components/schemas/LearningStep"
+        recommendedRoles:
+          type: array
+          items:
+            type: string
+
+    CareerPath:
+      type: object
+      required: [title, match]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        match:
+          type: integer
+        requiredSkills:
+          type: array
+          items:
+            type: string
+        averageSalary:
+          type: ["string", "null"]
+        growthRate:
+          type: ["string", "null"]
+
+    LearningStep:
+      type: object
+      required: [title, priority]
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          type: string
+          enum: [high, medium, low]
+        estimatedTime:
+          type: ["string", "null"]
+
+    SkillGapAnalysis:
+      type: object
+      required: [currentSkills, missingSkills, strengthAreas, improvementAreas]
+      properties:
+        currentSkills:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillItem"
+        missingSkills:
+          type: array
+          items:
+            $ref: "#/components/schemas/SkillItem"
+        strengthAreas:
+          type: array
+          items:
+            type: string
+        improvementAreas:
+          type: array
+          items:
+            type: string
+
+    SkillItem:
+      type: object
+      required: [name]
+      properties:
+        name:
+          type: string
+        level:
+          type: ["string", "null"]
+        importance:
+          type: ["string", "null"]
+
+    JobMatch:
+      type: object
+      required: [job, matchScore, matchReasons]
+      properties:
+        job:
+          $ref: "#/components/schemas/Job"
+        matchScore:
+          type: integer
+        matchReasons:
+          type: array
+          items:
+            type: string
+
+    ResumeAnalysisInput:
+      type: object
+      required: [resumeText]
+      properties:
+        resumeText:
+          type: string
+
+    ResumeAnalysis:
+      type: object
+      required: [skills, strengths, weaknesses, suitableRoles]
+      properties:
+        skills:
+          type: array
+          items:
+            type: string
+        strengths:
+          type: array
+          items:
+            type: string
+        weaknesses:
+          type: array
+          items:
+            type: string
+        missingSkills:
+          type: array
+          items:
+            type: string
+        suitableRoles:
+          type: array
+          items:
+            type: string
+        overallScore:
+          type: integer
+        summary:
+          type: string
+
+    # Dashboards
+    StudentDashboard:
+      type: object
+      required: [careerScore, profileCompletion, applicationsCount, sessionsCount, enrollmentsCount, recentJobs, recentMentors, upcomingSessions]
+      properties:
+        careerScore:
+          type: integer
+        profileCompletion:
+          type: integer
+        applicationsCount:
+          type: integer
+        sessionsCount:
+          type: integer
+        enrollmentsCount:
+          type: integer
+        recentJobs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Job"
+        recentMentors:
+          type: array
+          items:
+            $ref: "#/components/schemas/MentorProfile"
+        upcomingSessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Session"
+        recentApplications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Application"
+
+    CompanyDashboard:
+      type: object
+      required: [activeJobsCount, totalApplicationsCount, shortlistedCount, recentApplications, recentJobs]
+      properties:
+        activeJobsCount:
+          type: integer
+        totalApplicationsCount:
+          type: integer
+        shortlistedCount:
+          type: integer
+        hiredCount:
+          type: integer
+        recentApplications:
+          type: array
+          items:
+            $ref: "#/components/schemas/Application"
+        recentJobs:
+          type: array
+          items:
+            $ref: "#/components/schemas/Job"
+
+    MentorDashboard:
+      type: object
+      required: [totalSessions, upcomingSessions, completedSessions, rating, recentSessions]
+      properties:
+        totalSessions:
+          type: integer
+        upcomingSessions:
+          type: integer
+        completedSessions:
+          type: integer
+        rating:
+          type: ["number", "null"]
+        totalEarnings:
+          type: ["number", "null"]
+        recentSessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/Session"

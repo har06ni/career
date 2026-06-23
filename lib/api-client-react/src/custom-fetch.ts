@@ -356,6 +356,16 @@ export async function customFetch<T = unknown>(
     if (token) {
       headers.set("authorization", `Bearer ${token}`);
     }
+  } else if (!headers.has("authorization")) {
+    // Read from localStorage if no getter is configured
+    try {
+      const token = localStorage.getItem("career_ai_token");
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+    } catch (e) {
+      // ignore localStorage errors
+    }
   }
 
   const requestInfo = { method, url: resolveUrl(input) };

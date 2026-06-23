@@ -1,0 +1,511 @@
+Build a complete production-level AI-powered career platform web application similar to the reference design/video.
+
+The product name is "CareerAI".
+
+Goal:
+Create a complete SaaS platform where students can create profiles, get AI career recommendations, improve skills, find jobs, connect with mentors, and companies can find and hire students.
+
+The application must be fully functional with frontend, backend, database, authentication, APIs, and responsive UI.
+
+================================================
+
+TECH STACK:
+
+Frontend:
+- React + Vite
+- TypeScript
+- Tailwind CSS
+- React Router DOM
+- Framer Motion animations
+- Lucide React icons
+- Shadcn UI components
+
+Backend:
+- Node.js
+- Express.js
+
+Database:
+- PostgreSQL
+- Prisma ORM
+
+Authentication:
+- Firebase Authentication OR JWT authentication
+- Email/password login
+- Google login
+
+Storage:
+- Firebase Storage for profile images and resumes
+
+AI Integration:
+- OpenAI API integration
+- AI career recommendation engine
+- Resume analysis
+- Skill gap detection
+- Job matching algorithm
+
+Deployment:
+Frontend:
+- Vercel
+
+Backend:
+- Render/Railway
+
+Database:
+- Supabase PostgreSQL
+
+
+================================================
+
+USER TYPES:
+
+Create three roles:
+
+1. Student
+
+2. Mentor
+
+3. Company
+
+
+================================================
+
+AUTHENTICATION SYSTEM:
+
+Create:
+
+Student Signup:
+- Name
+- Email
+- Password
+- College
+- Degree
+- Graduation year
+
+Company Signup:
+- Company name
+- Email
+- Industry
+- Website
+- Password
+
+Mentor Signup:
+- Name
+- Experience
+- Skills
+- Company
+- Profile description
+
+
+Implement:
+
+- Login
+- Logout
+- Protected routes
+- Role-based dashboards
+
+
+================================================
+
+STUDENT FEATURES:
+
+Student Dashboard:
+
+Create modern dashboard similar to the video.
+
+Sections:
+
+1. Profile completion
+
+2. AI Career Score
+
+3. Recommended career path
+
+4. Skill analysis
+
+5. Recommended jobs
+
+6. Recommended courses
+
+7. Upcoming mentor sessions
+
+
+Student Profile:
+
+Fields:
+
+- Name
+- Profile photo
+- Resume upload
+- Skills
+- Projects
+- Certifications
+- Experience
+- Education
+
+
+AI Features:
+
+Resume Analyzer:
+
+User uploads resume.
+
+AI should analyze:
+
+- Skills
+- Strengths
+- Weaknesses
+- Missing skills
+- Suitable roles
+
+
+Career Recommendation:
+
+Based on:
+
+- Skills
+- Interest
+- Education
+- Projects
+
+Generate:
+
+- Career roadmap
+- Required skills
+- Learning plan
+
+
+================================================
+
+JOB SYSTEM:
+
+Companies can:
+
+Create job posts:
+
+Fields:
+
+- Job title
+- Description
+- Required skills
+- Salary
+- Location
+- Experience
+
+
+Students can:
+
+- Search jobs
+- Apply jobs
+- Track applications
+
+
+AI Job Matching:
+
+Match students with jobs based on:
+
+- Resume
+- Skills
+- Requirements
+
+
+================================================
+
+MENTOR SYSTEM:
+
+Create mentor marketplace.
+
+Features:
+
+Mentor cards:
+
+- Profile image
+- Name
+- Company
+- Experience
+- Skills
+- Rating
+- Price
+
+
+Students can:
+
+- Search mentors
+- Book sessions
+- View sessions
+
+
+Database should store:
+
+- Mentor availability
+- Booking details
+- Payment status
+
+
+================================================
+
+COURSE SYSTEM:
+
+Create learning section.
+
+Features:
+
+- Course listing
+- Categories
+- Progress tracking
+- Completion status
+
+
+================================================
+
+COMPANY DASHBOARD:
+
+Companies can:
+
+- Create profile
+- Post jobs
+- View applicants
+- Filter candidates
+- Download resumes
+- Contact students
+
+
+================================================
+
+DATABASE DESIGN:
+
+Create database tables:
+
+Users
+
+Fields:
+id
+name
+email
+password
+role
+createdAt
+
+
+StudentProfiles
+
+Fields:
+userId
+college
+degree
+skills
+resume
+projects
+
+
+Companies
+
+Fields:
+userId
+companyName
+industry
+website
+
+
+Jobs
+
+Fields:
+companyId
+title
+description
+skills
+salary
+
+
+Applications
+
+Fields:
+jobId
+studentId
+status
+
+
+Mentors
+
+Fields:
+userId
+experience
+skills
+rating
+
+
+Sessions
+
+Fields:
+studentId
+mentorId
+date
+status
+
+
+Courses
+
+Fields:
+title
+description
+category
+
+
+AIReports
+
+Fields:
+userId
+careerScore
+recommendations
+skillGap
+
+
+
+================================================
+
+UI DESIGN:
+
+Follow the provided reference:
+
+Style:
+
+- Minimal white background
+- Black typography
+- Premium SaaS look
+- Smooth animations
+- Modern cards
+- Sidebar dashboard layout
+- Responsive mobile design
+
+
+Pages:
+
+Landing Page:
+
+Navbar:
+
+Logo
+Sign in
+Get Started
+
+
+Hero:
+
+"Get a tailored path to your career"
+
+Buttons:
+
+Start for free
+
+For companies
+
+
+Sections:
+
+How it works
+
+AI Career Analysis
+
+Mentors
+
+Courses
+
+Jobs
+
+Testimonials
+
+
+================================================
+
+CREATE DASHBOARDS:
+
+Student dashboard:
+
+Sidebar:
+
+Dashboard
+My Profile
+AI Analysis
+Courses
+Jobs
+Projects
+Mentorship
+Settings
+
+
+Company dashboard:
+
+Sidebar:
+
+Dashboard
+Jobs
+Candidates
+Applications
+Profile
+
+
+================================================
+
+API CREATION:
+
+Create REST APIs:
+
+Authentication APIs
+
+User APIs
+
+Profile APIs
+
+Job APIs
+
+Application APIs
+
+Mentor APIs
+
+Course APIs
+
+AI Analysis APIs
+
+
+================================================
+
+SECURITY:
+
+Implement:
+
+- Password hashing
+- Input validation
+- Error handling
+- Protected APIs
+- Environment variables
+
+
+================================================
+
+FINAL REQUIREMENTS:
+
+Generate complete project structure.
+
+Create:
+
+Frontend folder
+
+Backend folder
+
+Database schema
+
+API routes
+
+Components
+
+Pages
+
+Authentication flow
+
+README file
+
+Setup instructions
+
+Environment variables example
+
+
+The final output should be a fully working deployable product, not only UI.
