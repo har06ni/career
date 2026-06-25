@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { BookOpen, Clock, PlayCircle, Star, Award, CheckCircle } from "lucide-react";
+import { BookOpen, Clock, CirclePlay as PlayCircle, Star, Award, CircleCheck as CheckCircle } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Progress } from "@/components/ui/progress";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,7 +24,7 @@ export default function Courses() {
   const enrollCourse = useEnrollCourse();
 
   const handleEnroll = (courseId: number) => {
-    enrollCourse.mutate({ data: { courseId } }, {
+    enrollCourse.mutate({ courseId }, {
       onSuccess: () => {
         toast({ title: "Successfully enrolled", description: "You can now start learning!" });
         queryClient.invalidateQueries({ queryKey: getGetMyEnrollmentsQueryKey() });

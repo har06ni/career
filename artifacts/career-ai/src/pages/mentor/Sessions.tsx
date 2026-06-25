@@ -1,10 +1,10 @@
-import { useGetMySessions, getGetMySessionsQueryKey, useUpdateSessionStatus } from "@workspace/api-client-react";
+import { useGetMySessions, getGetMySessionsQueryKey, useUpdateSessionStatus, SessionStatusUpdateStatus } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Clock, Video, CheckCircle2, XCircle } from "lucide-react";
+import { Calendar, Clock, Video, CircleCheck as CheckCircle2, Circle as XCircle } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
@@ -22,8 +22,8 @@ export default function MentorSessions() {
 
   const updateStatus = useUpdateSessionStatus();
 
-  const handleUpdateStatus = (sessionId: number, status: any, meetingUrl?: string) => {
-    updateStatus.mutate({ data: { status } /* Note: meetingUrl might need to be passed if the API supports it, but standard spec might not. Just passing status for now based on generated type */ }, {
+  const handleUpdateStatus = (sessionId: number, status: typeof SessionStatusUpdateStatus[keyof typeof SessionStatusUpdateStatus], meetingUrl?: string) => {
+    updateStatus.mutate({ sessionId, data: { status } }, {
       onSuccess: () => {
         toast({ title: "Session updated", description: `Session marked as ${status}.` });
         setActiveSessionId(null);

@@ -1,11 +1,11 @@
-import { useGetJobApplications, getGetJobApplicationsQueryKey, useGetMyJobs, getGetMyJobsQueryKey, useUpdateApplicationStatus } from "@workspace/api-client-react";
+import { useGetJobApplications, getGetJobApplicationsQueryKey, useGetMyJobs, getGetMyJobsQueryKey, useUpdateApplicationStatus, ApplicationStatusUpdateStatus } from "@workspace/api-client-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { FileText, CheckCircle, XCircle, Clock, Building2 } from "lucide-react";
+import { FileText, CircleCheck as CheckCircle, Circle as XCircle, Clock, Building2 } from "lucide-react";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -29,8 +29,8 @@ export default function Applications() {
 
   const updateStatus = useUpdateApplicationStatus();
 
-  const handleStatusChange = (appId: number, status: any) => {
-    updateStatus.mutate({ jobId: appId /* Assuming path takes appId in reality, but based on hook signature it might take jobId. We'll use the generated hook signature */, data: { status } }, {
+  const handleStatusChange = (appId: number, status: typeof ApplicationStatusUpdateStatus[keyof typeof ApplicationStatusUpdateStatus]) => {
+    updateStatus.mutate({ applicationId: appId, data: { status } }, {
       onSuccess: () => {
         toast({ title: "Status updated", description: `Application marked as ${status}.` });
         if (selectedJobId !== "all") {
